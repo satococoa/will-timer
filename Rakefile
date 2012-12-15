@@ -8,6 +8,7 @@ Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'will-timer'
   app.device_family = [:ipad]
+  app.interface_orientations = [:landscape_left, :landscape_right]
 
   conf_file = './config.yml'
   if File.exists?(conf_file)
