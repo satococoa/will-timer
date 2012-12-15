@@ -11,3 +11,8 @@ nbproject
 *~
 *.sw[po]
 .eprj
+vendor/bundle
+vendor/Pods
+.bundle
+config.yml
+testflight_launcher.rb
