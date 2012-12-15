@@ -8,6 +8,7 @@ Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'will-timer'
   app.device_family = [:ipad]
+
   conf_file = './config.yml'
   if File.exists?(conf_file)
     config = YAML::load_file(conf_file)
@@ -24,5 +25,9 @@ Motion::Project::App.setup do |app|
     env = ENV['ENV'] || 'development'
     app.codesign_certificate = config[env]['certificate']
     app.provisioning_profile = config[env]['provisioning']
+  end
+
+  app.pods do
+    pod 'Nimbus'
   end
 end
