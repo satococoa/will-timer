@@ -27,40 +27,10 @@ class MainController < UIViewController
     navigationItem.leftBarButtonItem = @tasks
     navigationItem.rightBarButtonItem = @settings
 
-    @task = UILabel.alloc.init.tap do |l|
-      l.text = 'タスクその1'
-      l.font = UIFont.fontWithName('HiraKakuProN-W6', size:128)
-      l.frame = [[40, 100], [1024-80, 200]]
-      l.backgroundColor = UIColor.clearColor
-      l.textColor = UIColor.blackColor
-      l.adjustsFontSizeToFitWidth = true
-      l.layer.borderColor = '#cccccc'.to_color
-      l.layer.borderWidth = 3
-    end
-
-    @left_time = UILabel.alloc.init.tap do |l|
-      l.text = "10'25\""
-      l.font = UIFont.fontWithName('Verdana-BoldItalic', size:128)
-      l.frame = [[40, 424], [512, 250]]
-      l.backgroundColor = UIColor.clearColor
-    end
-
-    @pause_restart_button = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |b|
-      b.setTitle('一時停止', forState:UIControlStateNormal)
-      b.addTarget(self, action:'pause_or_restart', forControlEvents:UIControlEventTouchUpInside)
-      b.frame = [[552+50, 424+75], [100, 100]]
-    end
-
-    @interrupt_button = UIButton.buttonWithType(UIButtonTypeRoundedRect).tap do |b|
-      b.setTitle('中止', forState:UIControlStateNormal)
-      b.addTarget(self, action:'interrupt', forControlEvents:UIControlEventTouchUpInside)
-      b.frame = [[552+50+100+50, 424+75], [100, 100]]
-    end
-
-    self.view.addSubview(@task)
-    self.view.addSubview(@left_time)
-    self.view.addSubview(@pause_restart_button)
-    self.view.addSubview(@interrupt_button)
+    @timer_view = TimerView.alloc.initWithFrame([[0, 0], [1028, 460]])
+    self.view.addSubview(@timer_view)
+    @task_view = TaskView.alloc.initWithFrame([[0, 460], [1028, 308]])
+    self.view.addSubview(@task_view)
   end
 
   def open_tasks
