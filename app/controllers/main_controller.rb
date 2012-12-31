@@ -7,7 +7,7 @@ end
 
 class MainController < UIViewController
   include BW::KVO
-  attr_accessor :working
+  attr_accessor :remaining
   DEFAULT_REMAINING = 25 * 60
 
   stylesheet :main_view
@@ -24,10 +24,10 @@ class MainController < UIViewController
 
   def initWithNibName(nibNameOrNil, bundle:nibBundleOrNil)
     super
-    @working = false
-    @remaining = DEFAULT_REMAINING
+    self.remaining = DEFAULT_REMAINING
     self.title = 'WillTimer'
-    observe(self, :working) do |old_value, new_value|
+    observe(self, :remaining) do |old_value, new_value|
+      @timer_view.remains = new_value
     end
     self
   end
@@ -42,18 +42,15 @@ class MainController < UIViewController
     @settings = UIBarButtonItem.alloc.initWithImage(UIImage.imageNamed('gear.png'), style:UIBarButtonItemStylePlain, target:self, action:'open_settings')
     navigationItem.leftBarButtonItem = @tasks
     navigationItem.rightBarButtonItem = @settings
-    @timer_view.remains = @remaining
+    @timer_view.remains = self.remaining
 
     @timer_view.start_button.whenTapped do
-      p 'start'
       @timer_view.working = true
       @timer = EM.add_periodic_timer 1.0 do
-        @remaining -= 1.0
-        @timer_view.remains = @remaining
+        self.remaining -= 1.0
       end
     end
     @timer_view.pause_button.whenTapped do
-      p 'pause'
       @timer_view.working = false
       EM.cancel_timer(@timer)
     end
@@ -61,8 +58,7 @@ class MainController < UIViewController
       p 'interrupt'
       @timer_view.working = false
       EM.cancel_timer(@timer)
-      @remaining = DEFAULT_REMAINING
-      @timer_view.remains = @remaining
+      self.remaining = DEFAULT_REMAINING
     end
   end
 
@@ -72,15 +68,5 @@ class MainController < UIViewController
 
   def open_settings
     p 'open_settings'
-  end
-
-  def pause_or_restart
-    p 'pause_or_restart'
-    self.working != @working
-  end
-
-  def interrupt
-    p 'interrupt'
-    self.working = false
   end
 end
