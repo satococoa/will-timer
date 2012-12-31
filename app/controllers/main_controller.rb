@@ -41,6 +41,19 @@ class MainController < UIViewController
     @settings = UIBarButtonItem.alloc.initWithImage(UIImage.imageNamed('gear.png'), style:UIBarButtonItemStylePlain, target:self, action:'open_settings')
     navigationItem.leftBarButtonItem = @tasks
     navigationItem.rightBarButtonItem = @settings
+
+    @timer_view.start_button.whenTapped do
+      p 'start'
+      @timer_view.working = true
+    end
+    @timer_view.pause_button.whenTapped do
+      p 'pause'
+      @timer_view.working = false
+    end
+    @timer_view.interrupt_button.whenTapped do
+      p 'interrupt'
+      @timer_view.working = false
+    end
   end
 
   def open_tasks
