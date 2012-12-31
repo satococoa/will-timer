@@ -1,6 +1,25 @@
+Teacup::Stylesheet.new(:main_view) do
+  style :root,
+    landscape: true,
+    portrait: false,
+    backgroundColor: UIColor.underPageBackgroundColor
+end
+
 class MainController < UIViewController
   include BW::KVO
   attr_accessor :working
+
+  stylesheet :main_view
+
+  layout :root do
+    # FIXME: viewのサイズもStyleSheetでやりたい
+    @timer_view = subview(
+      TimerView.alloc.initWithFrame([[0, 0], [1028, 460]])
+    )
+    @task_view = subview(
+      TaskView.alloc.initWithFrame([[0, 460], [1028, 308]])
+    )
+  end
 
   def initWithNibName(nibNameOrNil, bundle:nibBundleOrNil)
     super
@@ -16,20 +35,12 @@ class MainController < UIViewController
     unobserve_all
   end
 
-  def loadView
-    self.view = UIView.alloc.init.tap do |v|
-      v.backgroundColor = UIColor.underPageBackgroundColor
-    end
-
+  def viewDidLoad
+    super
     @tasks = UIBarButtonItem.alloc.initWithTitle(t(:tasks, 'Tasks'), style:UIBarButtonItemStyleBordered, target:self, action:'open_tasks')
     @settings = UIBarButtonItem.alloc.initWithImage(UIImage.imageNamed('gear.png'), style:UIBarButtonItemStylePlain, target:self, action:'open_settings')
     navigationItem.leftBarButtonItem = @tasks
     navigationItem.rightBarButtonItem = @settings
-
-    @timer_view = TimerView.alloc.initWithFrame([[0, 0], [1028, 460]])
-    self.view.addSubview(@timer_view)
-    @task_view = TaskView.alloc.initWithFrame([[0, 460], [1028, 308]])
-    self.view.addSubview(@task_view)
   end
 
   def open_tasks
