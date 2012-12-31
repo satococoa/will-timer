@@ -2,11 +2,6 @@ class MainController < UIViewController
   include BW::KVO
   attr_accessor :working
 
-  def dealloc
-    App.notification_center.unobserve(@style_observer)
-    unobserve_all
-  end
-
   def initWithNibName(nibNameOrNil, bundle:nibBundleOrNil)
     super
     @working = false
@@ -15,6 +10,10 @@ class MainController < UIViewController
     observe(self, :working) do |old_value, new_value|
     end
     self
+  end
+
+  def dealloc
+    unobserve_all
   end
 
   def loadView
