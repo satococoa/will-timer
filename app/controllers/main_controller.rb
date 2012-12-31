@@ -54,6 +54,7 @@ class MainController < UIViewController
     @timer_view.remains = self.remaining
 
     @timer_view.start_button.when_tapped do
+      @timer_view.interrupt_button.enabled = true
       @timer_view.working = true
       @timer = EM.add_periodic_timer 1.0 do
         self.remaining -= 1.0
@@ -69,9 +70,6 @@ class MainController < UIViewController
     end
     @timer_view.interrupt_button.when_tapped do
       @interrupt_alert.show
-    end
-    @timer_view.reset_button.when_tapped do
-      self.remaining = DEFAULT_REMAINING
     end
   end
 
@@ -101,6 +99,7 @@ class MainController < UIViewController
     when 1
       if button_index != alert_view.cancelButtonIndex
         @timer_view.working = false
+        @timer_view.interrupt_button.enabled = false
         EM.cancel_timer(@timer)
         self.remaining = DEFAULT_REMAINING
       end
