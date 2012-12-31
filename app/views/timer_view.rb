@@ -68,6 +68,15 @@ class TimerView < UIView
     end
   end
 
+  # タイマーが進んだときのみ中断ボタンを押せるようにする
+  def interruptable=(interruptable)
+    if interruptable
+      @interrupt_button.enabled = true
+    else
+      @interrupt_button.enabled = false
+    end
+  end
+
   def dealloc
     unobserve_all
   end
