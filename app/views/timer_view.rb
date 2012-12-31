@@ -54,7 +54,7 @@ class TimerView < UIView
       observe(self, :remains) do |old_value, new_value|
         minutes = new_value / 60
         seconds = new_value % 60
-        @digits.text = "%02d:%02d" % minutes, seconds
+        @digits.text = "%02d:%02d" % [minutes, seconds]
       end
       observe(self, :working) do |old_value, new_value|
         if new_value
