@@ -22,7 +22,7 @@ class TimerView < UIView
 
         @start_button = subview(
           UIButton.buttonWithType(UIButtonTypeRoundedRect),
-          title: '開始',
+          title: t(:start, 'Start'),
           frame: [
             [frame_width-30-100, 100],
             [80, 100]
@@ -31,7 +31,7 @@ class TimerView < UIView
 
         @pause_button = subview(
           UIButton.buttonWithType(UIButtonTypeRoundedRect),
-          title: '一時停止',
+          title: t(:pause, 'Pause'),
           hidden: true,
           frame: [
             [frame_width-30-100, 100],
@@ -41,8 +41,7 @@ class TimerView < UIView
 
         @interrupt_button = subview(
           UIButton.buttonWithType(UIButtonTypeRoundedRect),
-          title: '中止',
-          enabled: false,
+          title: t(:interrupt, 'Interrupt'),
           frame: [
             [frame_width-30-100, 100 + 130],
             [80, 100]
