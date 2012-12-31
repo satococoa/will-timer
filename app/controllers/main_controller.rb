@@ -34,7 +34,17 @@ class MainController < UIViewController
       message:t(:interrupt_sure, 'Are you sure to interrupt?'),
       delegate:self,
       cancelButtonTitle:t(:cancel, 'Cancel'),
-      otherButtonTitles:t(:ok, 'OK'), nil)
+      otherButtonTitles:t(:ok, 'OK'), nil).tap do |al|
+      al.tag = 1
+    end
+    @timeup_alert = UIAlertView.alloc.initWithTitle(
+      t(:timeup, 'Timeup!'),
+      message:t(:timeup_message, "It's time to rest."),
+      delegate:self,
+      cancelButtonTitle:t(:ok, 'OK'),
+      otherButtonTitles:nil).tap do |al|
+      al.tag = 2
+    end
     self
   end
 
@@ -54,6 +64,10 @@ class MainController < UIViewController
       @timer_view.working = true
       @timer = EM.add_periodic_timer 1.0 do
         self.remaining -= 1.0
+        if self.remaining <= 0
+          EM.cancel_timer(@timer)
+          alerm
+        end
       end
     end
     @timer_view.pause_button.when_tapped do
@@ -74,10 +88,21 @@ class MainController < UIViewController
   end
 
   def alertView(alert_view, clickedButtonAtIndex:button_index)
-    if button_index != alert_view.cancelButtonIndex
-      @timer_view.working = false
-      EM.cancel_timer(@timer)
+    case alert_view.tag
+    when 1
+      if button_index != alert_view.cancelButtonIndex
+        @timer_view.working = false
+        EM.cancel_timer(@timer)
+        self.remaining = DEFAULT_REMAINING
+      end
+    when 2
       self.remaining = DEFAULT_REMAINING
     end
+  end
+
+  def alerm
+    AudioServicesPlaySystemSound(1005)
+    @timer_view.working = false
+    @timeup_alert.show
   end
 end

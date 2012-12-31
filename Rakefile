@@ -28,6 +28,8 @@ Motion::Project::App.setup do |app|
     app.provisioning_profile = config[env]['provisioning']
   end
 
+  app.frameworks += ['AudioToolbox']
+
   app.pods do
     pod 'Nimbus'
   end
