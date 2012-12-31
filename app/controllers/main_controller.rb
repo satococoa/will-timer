@@ -29,6 +29,12 @@ class MainController < UIViewController
     observe(self, :remaining) do |old_value, new_value|
       @timer_view.remains = new_value
     end
+    @interrupt_alert = UIAlertView.alloc.initWithTitle(
+      t(:interrupt, 'Interrupt'),
+      message:t(:interrupt_sure, 'Are you sure to interrupt?'),
+      delegate:self,
+      cancelButtonTitle:t(:cancel, 'Cancel'),
+      otherButtonTitles:t(:ok, 'OK'), nil)
     self
   end
 
@@ -44,21 +50,18 @@ class MainController < UIViewController
     navigationItem.rightBarButtonItem = @settings
     @timer_view.remains = self.remaining
 
-    @timer_view.start_button.whenTapped do
+    @timer_view.start_button.when_tapped do
       @timer_view.working = true
       @timer = EM.add_periodic_timer 1.0 do
         self.remaining -= 1.0
       end
     end
-    @timer_view.pause_button.whenTapped do
+    @timer_view.pause_button.when_tapped do
       @timer_view.working = false
       EM.cancel_timer(@timer)
     end
-    @timer_view.interrupt_button.whenTapped do
-      p 'interrupt'
-      @timer_view.working = false
-      EM.cancel_timer(@timer)
-      self.remaining = DEFAULT_REMAINING
+    @timer_view.interrupt_button.when_tapped do
+      @interrupt_alert.show
     end
   end
 
@@ -68,5 +71,13 @@ class MainController < UIViewController
 
   def open_settings
     p 'open_settings'
+  end
+
+  def alertView(alert_view, clickedButtonAtIndex:button_index)
+    if button_index != alert_view.cancelButtonIndex
+      @timer_view.working = false
+      EM.cancel_timer(@timer)
+      self.remaining = DEFAULT_REMAINING
+    end
   end
 end

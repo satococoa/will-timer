@@ -60,11 +60,9 @@ class TimerView < UIView
         if new_value
           @start_button.hidden = true
           @pause_button.hidden = false
-          @interrupt_button.enabled = true
         else
           @start_button.hidden = false
           @pause_button.hidden = true
-          @interrupt_button.enabled = false
         end
       end
     end
