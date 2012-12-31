@@ -26,9 +26,6 @@ class MainController < UIViewController
     super
     self.remaining = DEFAULT_REMAINING
     self.title = 'WillTimer'
-    observe(self, :remaining) do |old_value, new_value|
-      @timer_view.remains = new_value
-    end
     @interrupt_alert = UIAlertView.alloc.initWithTitle(
       t(:interrupt, 'Interrupt'),
       message:t(:interrupt_sure, 'Are you sure to interrupt?'),
@@ -46,10 +43,6 @@ class MainController < UIViewController
       al.tag = 2
     end
     self
-  end
-
-  def dealloc
-    unobserve_all
   end
 
   def viewDidLoad
@@ -80,6 +73,19 @@ class MainController < UIViewController
     @timer_view.reset_button.when_tapped do
       self.remaining = DEFAULT_REMAINING
     end
+  end
+
+  def viewWillAppear(animated)
+    observe(self, :remaining) do |old_value, new_value|
+      @timer_view.remains = new_value
+    end
+    observe(@timer_view, :working) do |old_value, new_value|
+      puts "\e[32mworking changed: #{old_value} -> #{new_value}\e[0m"
+    end
+  end
+
+  def viewWillDisappear(animated)
+    unobserve_all
   end
 
   def open_tasks
