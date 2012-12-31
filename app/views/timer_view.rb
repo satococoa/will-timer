@@ -1,7 +1,7 @@
 class TimerView < UIView
   include BW::KVO
 
-  attr_accessor :remains, :digits, :start_button, :pause_button, :interrupt_button, :working
+  attr_accessor :remains, :digits, :start_button, :pause_button, :interrupt_button, :reset_button, :working
 
   def initWithFrame(rect)
     super.tap do
@@ -42,6 +42,16 @@ class TimerView < UIView
         @interrupt_button = subview(
           UIButton.buttonWithType(UIButtonTypeRoundedRect),
           title: t(:interrupt, 'Interrupt'),
+          hidden: true,
+          frame: [
+            [frame_width-30-100, 100 + 130],
+            [80, 100]
+          ]
+        )
+
+        @reset_button = subview(
+          UIButton.buttonWithType(UIButtonTypeRoundedRect),
+          title: t(:reset, 'Reset'),
           frame: [
             [frame_width-30-100, 100 + 130],
             [80, 100]
@@ -59,9 +69,13 @@ class TimerView < UIView
         if new_value
           @start_button.hidden = true
           @pause_button.hidden = false
+          @reset_button.hidden = true
+          @interrupt_button.hidden = false
         else
           @start_button.hidden = false
           @pause_button.hidden = true
+          @reset_button.hidden = false
+          @interrupt_button.hidden = true
         end
       end
     end

@@ -77,6 +77,9 @@ class MainController < UIViewController
     @timer_view.interrupt_button.when_tapped do
       @interrupt_alert.show
     end
+    @timer_view.reset_button.when_tapped do
+      self.remaining = DEFAULT_REMAINING
+    end
   end
 
   def open_tasks
