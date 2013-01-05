@@ -79,6 +79,11 @@ class MainController < UIViewController
     end
     observe(@timer_view, :working) do |old_value, new_value|
       puts "\e[32mworking changed: #{old_value} -> #{new_value}\e[0m"
+      if new_value
+        App.shared.idleTimerDisabled = true
+      else
+        App.shared.idleTimerDisabled = false
+      end
     end
   end
 

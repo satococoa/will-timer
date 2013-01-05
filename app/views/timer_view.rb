@@ -8,15 +8,20 @@ class TimerView < UIView
       frame_width = CGRectGetWidth(rect)
       frame_height = CGRectGetHeight(rect)
 
-      layout(self, backgroundColor: '#666666'.to_color) {
-        @digits = subview(UILabel,
+      bgcolor = UIColor.colorWithPatternImage(UIImage.imageNamed('carbon_fibre.png'))
+
+      layout(self, backgroundColor: bgcolor) {
+        @digits = subview(NIAttributedLabel,
           text: '00:00',
           font: UIFont.fontWithName('HelveticaNeue-CondensedBold', size:256),
-          textColor: UIColor.whiteColor,
+          textColor: '#eeeeee'.to_color,
+          shadowOffset: CGSizeMake(0, 1),
+          shadowColor: UIColor.whiteColor,
+          shadowBlur: 0.5,
           backgroundColor: UIColor.clearColor,
           frame: [
-            [30, 10],
-            [frame_width-(30*2)-100, frame_height-(10*2)]
+            [100, 60],
+            [frame_width-(30*2)-100-70, frame_height-60]
           ]
         )
 
@@ -55,6 +60,11 @@ class TimerView < UIView
         minutes = new_value / 60
         seconds = new_value % 60
         @digits.text = "%02d:%02d" % [minutes, seconds]
+        @digits.textKern = 24.0
+        @digits.textKern = 25.0
+        # @digits.setTextColor(
+        #   '#333333'.to_color,
+        #   range:@digits.text.rangeOfString(':'))
       end
       observe(self, :working) do |old_value, new_value|
         if new_value
